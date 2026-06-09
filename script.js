@@ -152,6 +152,45 @@ function createSupabaseClient() {
   return window.supabase.createClient(url, anonKey);
 }
 
+/* home */
+function fallingLeaves() {
+  const container = document.getElementById("leaves");
+
+  const colors = [
+    "#d8b4fe",
+    "#c084fc",
+    "#a855f7",
+    "#9333ea"
+  ];
+
+  setInterval(() => {
+const leaf = document.createElement("img");
+
+leaf.src = "/maple-leaf.png";
+leaf.className = "falling-leaf";
+leaf.style.color = "#a855f7";
+
+leaf.style.left = Math.random() * 100 + "vw";
+leaf.style.width = (12 + Math.random() * 18) + "px";
+
+leaf.style.animationDuration =
+  (8 + Math.random() * 6) + "s";
+
+leaf.style.setProperty(
+  "--drift",
+  (Math.random() * 120 - 60) + "px"
+);
+
+    container.appendChild(leaf);
+
+    setTimeout(() => leaf.remove(), 15000);
+
+  }, 300);
+}
+
+fallingLeaves();
+
+
 /* ===== Gallery (memories) ===== */
 function initGallery(){
   const grid=document.getElementById('memGrid');
@@ -301,6 +340,9 @@ function initGallery(){
         </button>
         <button class="edit" data-id="${memory.id}" aria-label="Edit">
           <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="delete" data-id="${memory.id}" aria-label="Delete">
+          <i class="fa-solid fa-trash"></i>
         </button>
       `;
       grid.appendChild(card);
