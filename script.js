@@ -302,9 +302,6 @@ function initGallery(){
         <button class="edit" data-id="${memory.id}" aria-label="Edit">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button class="delete" data-id="${memory.id}" aria-label="Delete">
-          <i class="fa-solid fa-trash"></i>
-        </button>
       `;
       grid.appendChild(card);
     });
