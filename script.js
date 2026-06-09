@@ -302,9 +302,6 @@ function initGallery(){
         <button class="edit" data-id="${memory.id}" aria-label="Edit">
           <i class="fa-solid fa-pen"></i>
         </button>
-        <button class="delete" data-id="${memory.id}" aria-label="Delete">
-          <i class="fa-solid fa-trash"></i>
-        </button>
       `;
       grid.appendChild(card);
     });
@@ -553,68 +550,180 @@ function initGame(){
   build();
 }
 
-/* ===== Marry Me ===== */
-function initMarry(){
-  const yes=document.getElementById('yesBtn');
-  const no=document.getElementById('noBtn');
-  const wrap=document.getElementById('marryBtns');
-  const celebration=document.getElementById('celebration');
-  let attempts=0;
-  const yesSizes=[1,1.15,1.3,1.5,1.75,2,2.3,2.6];
-  const noSizes=[1,.9,.78,.66,.54,.44,.36,.3];
-
-  function escape(){
-    attempts++;
-    const i=Math.min(attempts,yesSizes.length-1);
-    yes.style.transform=`scale(${yesSizes[i]})`;
-    no.style.transform=`scale(${noSizes[i]})`;
-    // move no button
-    const w=window.innerWidth,h=window.innerHeight;
-    const x=(Math.random()*w*.7)-w*.35;
-    const y=(Math.random()*h*.6)-h*.3;
-    no.style.position='fixed';
-    no.style.left=Math.max(20,Math.min(w-140,w/2+x))+'px';
-    no.style.top=Math.max(80,Math.min(h-80,h/2+y))+'px';
-  }
-  no.addEventListener('mouseenter',escape);
-  no.addEventListener('focus',escape);
-  no.addEventListener('touchstart',e=>{e.preventDefault();escape()},{passive:false});
-  no.addEventListener('click',escape);
-
-  yes.addEventListener('click',()=>{
-    document.getElementById('marryMain').style.display='none';
-    celebration.classList.add('show');
-    bloomFlowers();
-    setTimeout(fallingPetals,1200);
-  });
-}
-function bloomFlowers(){
-  const N=18;
-  for(let i=0;i<N;i++){
-    const f=document.createElement('div');f.className='flower';
-    f.style.left=(Math.random()*90+5)+'vw';
-    f.style.top=(Math.random()*80+10)+'vh';
-    f.style.animationDelay=(Math.random()*1.2)+'s';
-    for(let p=0;p<6;p++){
-      const petal=document.createElement('div');petal.className='petal';
-      petal.style.transform=`rotate(${p*60}deg) translateY(-12px)`;
-      f.appendChild(petal);
-    }
-    const c=document.createElement('div');c.className='center';f.appendChild(c);
-    document.body.appendChild(f);
-  }
-}
-function fallingPetals(){
-  setInterval(()=>{
-    const p=document.createElement('div');p.className='petal-fall';
-    p.style.left=Math.random()*100+'vw';
-    p.style.animationDuration=(6+Math.random()*6)+'s';
-    p.style.opacity=.4+Math.random()*.6;
-    p.style.transform=`scale(${.6+Math.random()*.9})`;
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(),12000);
-  },180);
-}
+/* ===== MARRY ME ===== */
+‎.marry{
+‎  min-height:calc(100vh - 90px);
+‎  display:flex;flex-direction:column;align-items:center;justify-content:center;
+‎  text-align:center;padding:40px 24px;position:relative;overflow:hidden;
+‎}
+‎.marry h1{
+‎  font-size:clamp(2.6rem,8vw,5rem);
+‎  background:var(--gradient-pink);
+‎  -webkit-background-clip:text;background-clip:text;color:transparent;
+‎  margin-bottom:14px;text-shadow:0 0 80px rgba(255,182,200,.4);
+‎}
+‎.marry .sub{
+‎  font-family:'Cormorant Garamond','Playfair Display',serif;font-style:italic;
+‎  color:var(--muted);max-width:560px;font-size:1.15rem;margin-bottom:44px;
+‎}
+‎.marry-btns{display:flex;gap:20px;align-items:center;position:relative;height:80px}
+‎#yesBtn{
+‎  padding:18px 44px;border-radius:50px;border:none;cursor:pointer;
+‎  font-family:'Inter',sans-serif;font-weight:600;font-size:1.1rem;letter-spacing:1px;
+‎  background:var(--gradient-pink);color:#3a1228;
+‎  box-shadow:0 12px 40px rgba(255,155,181,.5);
+‎  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+‎}
+‎#yesBtn:hover{box-shadow:0 16px 50px rgba(255,155,181,.7)}
+‎#noBtn{
+‎  padding:14px 32px;border-radius:50px;border:1px solid var(--border);cursor:pointer;
+‎  font-family:'Inter',sans-serif;font-weight:500;font-size:.95rem;
+‎  background:rgba(255,255,255,.06);color:var(--muted);
+‎  transition:transform .35s var(--ease), width .3s, padding .3s, font-size .3s;
+‎  position:relative;
+‎}
+‎#noBtn:hover{background:rgba(255,255,255,.1);color:var(--text)}
+‎
+‎/* Celebration */
+‎.celebration{
+‎  position: fixed;
+‎  inset: 0;
+‎  display: none;
+‎  align-items: center;
+‎  justify-content: center;
+‎  flex-direction: column;
+‎  text-align: center;
+‎  padding: 24px;
+‎  z-index: 50;
+‎
+‎  background-image: url("7f48d86f89e229b7bdb7acd57d83c1af.jpg");
+‎  background-size: cover;      /* sakop buong screen */
+‎  background-position: center; /* naka-center */
+‎  background-repeat: no-repeat;
+‎  
+‎  opacity: 0;
+‎    transform: translateY(20px);
+‎
+‎    animation: fadeInUp .8s ease forwards;
+‎}
+‎@keyframes fadeInUp{
+‎    from{
+‎        opacity: 0;
+‎        transform: translateY(20px);
+‎    }
+‎    to{
+‎        opacity: 1;
+‎        transform: translateY(0);
+‎    }
+‎}
+‎.celebration.show{display:flex}
+‎.celebration h1{
+‎  font-size: clamp(3rem,10vw,6.5rem);
+‎  color: #ffd6e7;
+‎
+‎  text-shadow:
+‎    0 0 10px rgba(255,214,231,.😎,
+‎    0 0 25px rgba(255,182,193,.6),
+‎    0 4px 12px rgba(0,0,0,.8);
+‎
+‎}
+‎.celebration .forever{
+‎  font-family: 'Playfair Display', serif;
+‎  font-size: 2rem;
+‎  color: #ffd6e7;
+‎    text-shadow:
+‎        0 0 10px rgba(255,214,231,.😎,
+‎        0 0 25px rgba(255,182,193,.6),
+‎        0 4px 12px rgba(0,0,0,.8);
+‎}
+‎@keyframes scaleIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+‎
+‎
+‎p.msg{
+‎    font-size: 1.25rem;
+‎    line-height: 1.9;
+‎
+‎    color: #fff8f8;
+‎
+‎    text-shadow:
+‎      0 2px 8px rgba(0,0,0,.6),
+‎      0 0 20px rgba(255,255,255,.2);
+‎
+‎    font-weight: 700;
+‎}
+‎p.msg{
+‎  background: linear-gradient(
+‎    135deg,
+‎    rgba(255, 182, 193, .18),
+‎    rgba(255, 105, 180, .10)
+‎  );
+‎
+‎  backdrop-filter: blur(12px);
+‎  -webkit-backdrop-filter: blur(12px);
+‎
+‎  border: 1px solid rgba(255, 220, 230, .30);
+‎
+‎  box-shadow:
+‎    0 10px 35px rgba(255, 105, 180, .18),
+‎    inset 0 1px 0 rgba(255,255,255,.2);
+‎
+‎  border-radius: 20px;
+‎  padding: 18px 22px;
+‎
+‎  color: #fffafc;
+‎}
+‎
+‎
+‎
+‎.celebration-content{
+‎    width: 100%;
+‎    max-width: 900px;
+‎
+‎    max-height: 85vh;
+‎    overflow-y: auto;
+‎
+‎    padding: 20px;
+‎    margin-top: 100px;
+‎
+‎    display: flex;
+‎    flex-direction: column;
+‎    gap: 24px;
+‎
+‎    scrollbar-width: none;
+‎}
+‎
+‎.celebration-content::-webkit-scrollbar{
+‎    display:none;
+‎}
+‎.celebration::before{
+‎    content:"";
+‎    position:absolute;
+‎    inset:0;
+‎
+‎    background:
+‎      linear-gradient(
+‎        rgba(20,10,20,.25),
+‎        rgba(20,10,20,.45)
+‎      );
+‎
+‎    z-index:-1;
+‎}
+‎
+‎
+‎
+‎/* Falling petals */
+‎.petal-fall{
+‎  position:fixed;top:-30px;width:14px;height:18px;
+‎  background:radial-gradient(ellipse at 50% 100%,#ffd1dc,#ff9bb5);
+‎  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+‎  pointer-events:none;z-index:40;
+‎  animation:fall linear infinite;
+‎}
+‎@keyframes fall{
+‎  0%{transform:translateY(0) rotate(0);opacity:0}
+‎  10%{opacity:1}
+‎  100%{transform:translateY(110vh) rotate(720deg);opacity:.7}
+   }
 
 /* ===== Utils ===== */
 function escapeHtml(s) {
